@@ -6,7 +6,7 @@
 <title>Which Cricketer Are You? | OruCupOxygen</title>
 <meta property="og:title" content="Which Cricketer Are You?">
 <meta property="og:description" content="15 legends. 10 questions. One of them is you. Powered by OruCupOxygen.">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -27,26 +27,27 @@ body{
   overflow-x:hidden;
 }
 
-/* ── CRICKET SYMBOLS CANVAS ── */
+/* ── SCOREBOARD CANVAS ── */
 .cricket-canvas{
   position:fixed;inset:0;
   pointer-events:none;
   z-index:0;
   overflow:hidden;
 }
-.cricket-symbol{
+.score-mark{
   position:absolute;
-  font-family:serif;
+  font-family:'DM Mono',monospace;
+  font-weight:300;
   opacity:0;
-  animation:floatSymbol linear infinite;
+  animation:floatMark linear infinite;
   user-select:none;
-  line-height:1;
+  letter-spacing:0.05em;
 }
-@keyframes floatSymbol{
-  0%{opacity:0;transform:translateY(0) rotate(0deg)}
-  10%{opacity:var(--op)}
-  90%{opacity:var(--op)}
-  100%{opacity:0;transform:translateY(-120vh) rotate(25deg)}
+@keyframes floatMark{
+  0%  {opacity:0;transform:translateY(0)}
+  8%  {opacity:var(--op)}
+  88% {opacity:var(--op)}
+  100%{opacity:0;transform:translateY(-115vh)}
 }
 
 .screen{display:none;min-height:100vh;flex-direction:column;align-items:center;padding:36px 24px 64px;position:relative}
@@ -427,29 +428,33 @@ document.addEventListener('click', startBGM, {once:true});
 document.addEventListener('touchstart', startBGM, {once:true});
 
 // ── CRICKET SYMBOLS ──
-const CRICKET_SYMBOLS = ['🏏','🎳','⚾','🏟','🌿','●','◉','▲','◆'];
-const CRICKET_CHARS   = ['🏏','🏏','🎳','🎳','●','●','◉','▲','◆'];
+const SCORE_MARKS = [
+  '·','·','·','·','·',
+  '1','1','2','2',
+  '4','4','6',
+  'W','nb','wd',
+  '· · · 4','1 · 1 · · 2',
+  '· W · · 1 4','· · · · · 1',
+];
 
 function spawnCricket(containerId, dark) {
   const container = document.getElementById(containerId);
   if (!container) return;
   container.innerHTML = '';
   const color = dark ? '#e8b84b' : '#c9932a';
-  const count = 18;
+  const count = 28;
   for (let i = 0; i < count; i++) {
     const el = document.createElement('span');
-    el.className = 'cricket-symbol';
-    // alternate between emoji and geometric chars
-    const chars = ['🏏','🎳','●','◉','◆','▲','🏏','●','🎳'];
-    el.textContent = chars[Math.floor(Math.random() * chars.length)];
-    const size = 14 + Math.random() * 28;
-    const opacity = 0.05 + Math.random() * 0.09;
-    const left = Math.random() * 100;
-    const duration = 14 + Math.random() * 22;
+    el.className = 'score-mark';
+    el.textContent = SCORE_MARKS[Math.floor(Math.random() * SCORE_MARKS.length)];
+    const size = 11 + Math.random() * 14;
+    const opacity = 0.06 + Math.random() * 0.11;
+    const left = 2 + Math.random() * 96;
+    const duration = 16 + Math.random() * 22;
     const delay = -(Math.random() * duration);
     el.style.cssText = `
       left:${left}%;
-      bottom:-10%;
+      bottom:-5%;
       font-size:${size}px;
       color:${color};
       --op:${opacity};
